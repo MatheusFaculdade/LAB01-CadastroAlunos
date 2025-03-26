@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Alunos</title>
+    <script src="home.js" defer></script>
+    <link rel="stylesheet" href="./home.css">
+</head>
+<br>
+    <h1>Cadastro de Alunos</h1>
+    
+    <form id="form-container">
+        <div class="from-dist">
+            <label class="form-label" for="nome">Nome:</label>
+            <input class="form-input" type="text" id="nome" required>
+        </div>
+        
+        <div class="from-dist">
+            <label class="form-label" for="idade">Idade:</label>
+            <input class="form-input" type="number" id="idade" min="1" required>
+        </div>
+        
+        <div class="from-dist">
+            <label class="form-label" for="curso">Curso:</label>
+            <select id="curso" class="form-input" required>
+                <option value="">Selecione um Curso</option>
+                <option value="JavaScript">JavaScript</option>
+                <option value="Python">Python</option>
+                <option value="Java">Java</option>
+            </select>
+        </div>
+        
+        <div class="from-dist">
+            <label class="form-label" for="notaFinal">Nota Final:</label>
+            <input class="form-input" type="number" id="notaFinal" required>
+        </div>
+        <div class="div-button">
+            <button class="form-button" type="button" onclick="cadastrar()">Cadastrar</button>
+        </div>
+    </form>
+</br>
+    <table>
+        <tr>
+            <th>Nome</th>
+            <th>Idade</th>
+            <th>Curso</th>
+            <th>Nota Final</th>
+        </tr>
+        <tbody id="alunos"></tbody>
+    </table>
+</body>
+</html>
