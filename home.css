@@ -46,3 +46,16 @@
 .div-button{
     margin-top: 2rem;
 }
+
+table, td, th {
+    border: 1px solid black;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 80%;
+  }
+  
+  th {
+    height: 3rem;
+  }
