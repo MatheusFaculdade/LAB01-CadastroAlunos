@@ -1,7 +1,7 @@
 class Aluno {
     constructor(nome, idade, curso, notaFinal) {
         this.nome = nome;
-        this.idade = idade;
+        this.idade = parseInt(idade);
         this.curso = curso;
         this.notaFinal = parseFloat(notaFinal);
     }
@@ -18,20 +18,26 @@ const cursoInput = document.getElementById("curso");
 const notaFinalInput = document.getElementById("notaFinal");
 const corpoTabela = document.getElementById("bodytable");
 const cadastrarBtn = document.getElementById("cadastrarBtn");
+const relatorioDiv = document.getElementById("relatorio");
+
+const btnAprovados = document.getElementById("btnAprovados");
+const btnMediaNotas = document.getElementById("btnMediaNotas");
+const btnMediaIdades = document.getElementById("btnMediaIdades");
+const btnOrdenarNomes = document.getElementById("btnOrdenarNomes");
+const btnQuantidadePorCurso = document.getElementById("btnQuantidadePorCurso");
 
 cadastrarBtn.addEventListener("click", () => {
-    if (!nomeInput.value || !idadeInput.value || !cursoInput.value || !notaFinalInput.value) {
+    const nome = nomeInput.value;
+    const idade = idadeInput.value;
+    const curso = cursoInput.value;
+    const notaFinal = notaFinalInput.value;
+
+    if (!nome || !idade || !curso || !notaFinal) {
         alert("Preencha todos os campos!");
         return;
     }
 
-    const aluno = new Aluno(
-        nomeInput.value,
-        idadeInput.value,
-        cursoInput.value,
-        notaFinalInput.value
-    );
-
+    const aluno = new Aluno(nome, idade, curso, notaFinal);
     usuarios.push(aluno);
 
     nomeInput.value = '';
@@ -40,29 +46,9 @@ cadastrarBtn.addEventListener("click", () => {
     notaFinalInput.value = '';
 
     renderizarTabela();
-    console.log(aluno.toString());
+
     alert("Aluno cadastrado com sucesso!");
 });
-
-const editarAluno = (indice) => {
-    const aluno = usuarios[indice];
-    nomeInput.value = aluno.nome;
-    idadeInput.value = aluno.idade;
-    cursoInput.value = aluno.curso;
-    notaFinalInput.value = aluno.notaFinal;
-
-    usuarios.splice(indice, 1);
-
-    renderizarTabela();
-    alert("Aluno em edição. Altere os campos e clique em Cadastrar.");
-}
-
-const excluirAluno = (indice) => {
-    const alunoExcluido = usuarios.splice(indice, 1)[0];
-    renderizarTabela();
-    console.log(`Aluno excluído: ${alunoExcluido.toString()}`);
-    alert("Aluno excluído com sucesso!");
-}
 
 const renderizarTabela = () => {
     corpoTabela.innerHTML = '';
@@ -76,14 +62,41 @@ const renderizarTabela = () => {
             <td>${aluno.notaFinal}</td>
             <td>${aluno.isAprovado() ? 'Aprovado' : 'Reprovado'}</td>
             <td>
-                <button class="btn-editar">Editar</button>
-                <button class="btn-excluir">Excluir</button>
+                <button onclick="editarAluno(${indice})">Editar</button>
+                <button onclick="excluirAluno(${indice})">Excluir</button>
             </td>
         `;
-
         corpoTabela.appendChild(linha);
-
-        linha.querySelector(".btn-editar").addEventListener("click", () => editarAluno(indice));
-        linha.querySelector(".btn-excluir").addEventListener("click", () => excluirAluno(indice));
     });
 }
+
+btnAprovados.addEventListener("click", () => {
+    const aprovados = usuarios.filter(aluno => aluno.isAprovado());
+    relatorioDiv.innerHTML = `<h3>Alunos Aprovados</h3><ul>${aprovados.map(aluno => `<li>${aluno.toString()}</li>`).join('')}</ul>`;
+});
+
+btnMediaNotas.addEventListener("click", () => {
+    const media = usuarios.reduce((acc, aluno) => acc + aluno.notaFinal, 0) / usuarios.length;
+    relatorioDiv.innerHTML = `<h3>Média das Notas Finais: ${media.toFixed(2)}</h3>`;
+});
+
+btnMediaIdades.addEventListener("click", () => {
+    const mediaIdade = usuarios.reduce((acc, aluno) => acc + aluno.idade, 0) / usuarios.length;
+    relatorioDiv.innerHTML = `<h3>Média das Idades: ${mediaIdade.toFixed(2)}</h3>`;
+});
+
+btnOrdenarNomes.addEventListener("click", () => {
+    const nomesOrdenados = usuarios.map(aluno => aluno.nome).sort();
+    relatorioDiv.innerHTML = `<h3>Alunos Ordenados:</h3><ul>${nomesOrdenados.map(nome => `<li>${nome}</li>`).join('')}</ul>`;
+});
+
+btnQuantidadePorCurso.addEventListener("click", () => {
+    const quantidadePorCurso = usuarios.reduce((acc, aluno) => {
+        acc[aluno.curso] = (acc[aluno.curso] || 0) + 1;
+        return acc;
+    }, {});
+    
+    relatorioDiv.innerHTML = `<h3>Quantidade por Curso:</h3><ul>${
+        Object.entries(quantidadePorCurso).map(([curso, quantidade]) => `<li>${curso}: ${quantidade}</li>`).join('')
+    }</ul>`;
+});
