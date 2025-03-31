@@ -6,13 +6,9 @@ class Aluno {
         this.notaFinal = parseFloat(notaFinal);
     }
 
-    isAprovado() {
-        return this.notaFinal >= 7;
-    }
+    isAprovado = () => this.notaFinal >= 7;
 
-    toString() {
-        return `Nome: ${this.nome}, Idade: ${this.idade}, Curso: ${this.curso}, Nota Final: ${this.notaFinal}, Aprovado: ${this.isAprovado() ? 'Sim' : 'Não'}`;
-    }
+    toString = () => `Nome: ${this.nome}, Idade: ${this.idade}, Curso: ${this.curso}, Nota Final: ${this.notaFinal}, Aprovado: ${this.isAprovado() ? 'Sim' : 'Não'}`;
 }
 
 let usuarios = [];
@@ -21,19 +17,20 @@ const idadeInput = document.getElementById("idade");
 const cursoInput = document.getElementById("curso");
 const notaFinalInput = document.getElementById("notaFinal");
 const corpoTabela = document.getElementById("bodytable");
+const cadastrarBtn = document.getElementById("cadastrarBtn");
 
-function cadastrar() {
-    const nome = nomeInput.value;
-    const idade = idadeInput.value;
-    const curso = cursoInput.value;
-    const notaFinal = notaFinalInput.value;
-
-    if (!nome || !idade || !curso || !notaFinal) {
+cadastrarBtn.addEventListener("click", () => {
+    if (!nomeInput.value || !idadeInput.value || !cursoInput.value || !notaFinalInput.value) {
         alert("Preencha todos os campos!");
         return;
     }
 
-    const aluno = new Aluno(nome, idade, curso, notaFinal);
+    const aluno = new Aluno(
+        nomeInput.value,
+        idadeInput.value,
+        cursoInput.value,
+        notaFinalInput.value
+    );
 
     usuarios.push(aluno);
 
@@ -43,11 +40,11 @@ function cadastrar() {
     notaFinalInput.value = '';
 
     renderizarTabela();
-
+    console.log(aluno.toString());
     alert("Aluno cadastrado com sucesso!");
-}
+});
 
-function editarAluno(indice) {
+const editarAluno = (indice) => {
     const aluno = usuarios[indice];
     nomeInput.value = aluno.nome;
     idadeInput.value = aluno.idade;
@@ -57,15 +54,17 @@ function editarAluno(indice) {
     usuarios.splice(indice, 1);
 
     renderizarTabela();
+    alert("Aluno em edição. Altere os campos e clique em Cadastrar.");
 }
 
-function excluirAluno(indice) {
-    usuarios.splice(indice, 1);
+const excluirAluno = (indice) => {
+    const alunoExcluido = usuarios.splice(indice, 1)[0];
     renderizarTabela();
+    console.log(`Aluno excluído: ${alunoExcluido.toString()}`);
     alert("Aluno excluído com sucesso!");
 }
 
-function renderizarTabela() {
+const renderizarTabela = () => {
     corpoTabela.innerHTML = '';
 
     usuarios.forEach((aluno, indice) => {
@@ -77,10 +76,14 @@ function renderizarTabela() {
             <td>${aluno.notaFinal}</td>
             <td>${aluno.isAprovado() ? 'Aprovado' : 'Reprovado'}</td>
             <td>
-                <button onclick="editarAluno(${indice})">Editar</button>
-                <button onclick="excluirAluno(${indice})">Excluir</button>
+                <button class="btn-editar">Editar</button>
+                <button class="btn-excluir">Excluir</button>
             </td>
         `;
+
         corpoTabela.appendChild(linha);
+
+        linha.querySelector(".btn-editar").addEventListener("click", () => editarAluno(indice));
+        linha.querySelector(".btn-excluir").addEventListener("click", () => excluirAluno(indice));
     });
 }
