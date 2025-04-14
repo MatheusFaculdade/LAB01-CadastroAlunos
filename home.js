@@ -100,3 +100,28 @@ btnQuantidadePorCurso.addEventListener("click", () => {
         Object.entries(quantidadePorCurso).map(([curso, quantidade]) => `<li>${curso}: ${quantidade}</li>`).join('')
     }</ul>`;
 });
+
+const mostrarAltosSalarios = () => {
+    const lista = relatorios.listarAltosSalarios();
+    if (lista.length === 0) {
+        relatorioDiv.innerHTML = "<p>Nenhum funcionário com salário acima de R$ 5000.</p>";
+    } else {
+        relatorioDiv.innerHTML = `<p><strong>Funcionários com salário acima de R$ 5000:</strong><br>${lista.map(f => f.toString()).join('<br>')}</p>`;
+    }
+};
+
+const mostrarMediaSalarial = () => {
+    const media = relatorios.mediaSalarial().toFixed(2);
+    relatorioDiv.innerHTML = `<p><strong>Média Salarial:</strong> R$ ${media}</p>`;
+};
+
+const mostrarCargosUnicos = () => {
+    const cargos = relatorios.listarCargosUnicos();
+    relatorioDiv.innerHTML = `<p><strong>Cargos únicos:</strong> ${cargos.join(', ')}</p>`;
+};
+
+const mostrarNomesMaiusculos = () => {
+    const nomes = relatorios.listarNomesMaiusculos();
+    relatorioDiv.innerHTML = `<p><strong>Nomes em maiúsculo:</strong><br>${nomes.join('<br>')}</p>`;
+};
+
